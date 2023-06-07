@@ -1,0 +1,21 @@
+import static com.jayway.restassured.RestAssured.given
+
+def paymentEndpoint = "https://radarbox.com/api/payment"
+def paymentDetails = [
+  "amount": 50.00,
+  "cardNumber": "1234567890123456",
+  "expiryDate": "12/24",
+  "cvv": "123"
+]
+
+def response = given()
+  .contentType("application/json")
+  .body(paymentDetails)
+  .when()
+  .post(paymentEndpoint)
+  .then()
+  .extract()
+  .response()
+
+assert response.statusCode == 200
+assert response.body().asString().contains("Payment successful")
