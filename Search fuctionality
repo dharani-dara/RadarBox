@@ -1,0 +1,15 @@
+import static com.jayway.restassured.RestAssured.given
+
+def searchEndpoint = "https://radarbox.com/api/search"
+def searchQuery = "New York"
+
+def response = given()
+  .param("query", searchQuery)
+  .when()
+  .get(searchEndpoint)
+  .then()
+  .extract()
+  .response()
+
+assert response.statusCode == 200
+assert response.body().asString().contains("New York")
