@@ -1,0 +1,27 @@
+import groovy.json.JsonSlurper
+import static com.jayway.restassured.RestAssured.given
+
+def loginEndpoint = "https://radarbox.com/api/login"
+
+def requestBody = """
+{
+  "username": "testuser",
+  "password": "Test1234"
+}
+"""
+
+def response = given()
+  .contentType("application/json")
+  .body(requestBody)
+  .when()
+  .post(loginEndpoint)
+  .then()
+  .extract()
+  .response()
+
+def jsonResponse = new JsonSlurper().parseText(response.asString())
+
+assert response.statusCode == 200
+assert jsonResponse.status == "success"
+assert jsonResponse.message == "Login successful"
+assert jsonResponse.token != null
